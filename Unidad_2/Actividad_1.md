@@ -1,46 +1,65 @@
+# 🧠 Máquinas de Estados Finitos (MEF)
 
-Máquinas de estados 
+Una **máquina de estados finitos** es un modelo matemático y gráfico que representa sistemas cuyo comportamiento depende de una secuencia de eventos.
 
-Una máquina de estados finitos (o MEF) es un modelo matemático y gráfico para representar sistemas cuyo comportamiento depende de una secuencia de eventos. Sus elementos clave son:
+## 🧩 Elementos clave
 
-1. Estados: Un conjunto finito de “situaciones” en las que el sistema puede encontrarse.
-2. Entradas: Eventos o señales externas que disparan cambios.
-3. Transiciones: Reglas que, en función del estado actual y (en el caso de Mealy) de la entrada, determinan el siguiente estado.
-4. Salidas: Acciones o señales generadas, que pueden depender solo del estado (Máquina de Moore) o del estado y la entrada (Máquina de Mealy).
+- **Estados**: Conjunto finito de “situaciones” en las que el sistema puede encontrarse.
+- **Entradas**: Eventos o señales externas que disparan cambios.
+- **Transiciones**: Reglas que, según el estado actual y (en el caso de Mealy) la entrada, determinan el siguiente estado.
+- **Salidas**: Acciones o señales generadas, que pueden depender:
+  - Solo del estado (Máquina de **Moore**).
+  - Del estado y la entrada (Máquina de **Mealy**).
 
-Máquina Moore
+---
 
-En una Máquina de Moore, las salidas dependen únicamente del estado actual y no de las entradas en el instante de transición.
+## 🟢 Máquina de Moore
 
-Características: 
+En una **Máquina de Moore**, las salidas dependen **solo del estado actual**, sin considerar las entradas en el instante de transición.
 
--Salidas ligadas al estado
-    Cada estado lleva asociada una o varias salidas fijas.
-    Al entrar en un estado, se activan inmediatamente las salidas correspondientes.
--Transición basada en la entrada
-    Las flechas de transición (de un estado a otro) se disparan cuando se cumple una condición sobre la entrada, pero la salida no cambia hasta que entras al nuevo estado.
--Ventajas
-    Salidas estables: no “parpadean” si la entrada cambia bruscamente.
-    Diseño sencillo cuando la lógica de salida no requiere reacción instantánea a la entrada.
--Inconvenientes
-    Puede haber latencia: la respuesta a una entrada ocurre sólo en la frontera de estados, no al instante.
+### ✳️ Características:
 
-Máquina de Mealy
+- **Salidas ligadas al estado**:  
+  Cada estado tiene asociadas una o más salidas fijas.  
+  Al entrar a un estado, se activan inmediatamente las salidas correspondientes.
 
-Una Máquina de Mealy es un tipo de máquina de estados finitos en la que las salidas dependen tanto del estado actual como de las entradas en el momento de la transición.
+- **Transición basada en la entrada**:  
+  Las transiciones se disparan cuando se cumple una condición sobre la entrada,  
+  pero las salidas no cambian hasta ingresar al nuevo estado.
 
-Características:
+### ✅ Ventajas:
+- **Salidas estables**: No parpadean si la entrada cambia bruscamente.
+- **Diseño más sencillo**: Útil cuando no se requiere reacción instantánea a la entrada.
 
--Salidas ligadas a transición
-    Cada flecha (transición) va anotada con “condición_entrada / salida”.
-    La salida puede cambiar inmediatamente al cumplirse la condición, sin esperar a entrar al siguiente estado.
--Transición basada en estado + entrada
-    El siguiente estado se determina como en cualquier FSM, pero la salida se genera “on-the-fly” al evaluar la entrada.
--Ventajas
-    Respuesta más rápida: la salida reacciona al instante ante cambios de entrada.
-    A menudo reduce el número de estados necesarios.
--Inconvenientes
-    Diseño de salidas puede resultar más complejo y menos predecible, porque cambian dentro de los cambios de estado.
+### ⚠️ Inconvenientes:
+- **Latencia en la respuesta**: La salida cambia solo al entrar al nuevo estado.
+
+---
+
+## 🔵 Máquina de Mealy
+
+Una **Máquina de Mealy** genera salidas que dependen tanto del estado actual como de las entradas **en el momento de la transición**.
+
+### ✳️ Características:
+
+- **Salidas ligadas a la transición**:  
+  Cada flecha de transición se anota como:  
+  `condición_entrada / salida`  
+  La salida puede cambiar **inmediatamente** al cumplirse la condición, sin esperar al siguiente estado.
+
+- **Transición basada en estado + entrada**:  
+  El siguiente estado se determina como en cualquier FSM,  
+  pero la **salida se genera al evaluar la entrada**, sin cambiar de estado.
+
+### ✅ Ventajas:
+- **Respuesta más rápida**: Las salidas reaccionan al instante ante cambios de entrada.
+- **Menor número de estados**: Puede simplificar el diseño general.
+
+### ⚠️ Inconvenientes:
+- **Diseño más complejo**:  
+  Las salidas pueden volverse menos predecibles, ya que cambian dentro de las transiciones.
+
+---
 
 
 Diferencias:
