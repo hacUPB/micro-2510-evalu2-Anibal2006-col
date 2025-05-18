@@ -1,43 +1,83 @@
-ACTIVIDAD 3
+# ACTIVIDAD 3
 
-Programando una MEF en C para antirrebote
+## Programando una MEF en C para Antirrebote
 
-Debounce (anti-rebote)
-    Técnica para filtrar las fluctuaciones eléctricas (rebotes) que ocurren al presionar o soltar un pulsador, esperando un intervalo fijo (p.ej. 30 ms) antes de confirmar un cambio de estado.
+### 🟡 Debounce (Anti-rebote)
+Técnica para filtrar las fluctuaciones eléctricas (rebotes) que ocurren al presionar o soltar un pulsador. Consiste en esperar un intervalo fijo (por ejemplo, 30 ms) antes de confirmar un cambio de estado.
 
-Diagama de estados
-    Representación gráfica de la MEF donde cada nodo es un estado y cada flecha una transición, etiquetada con la condición de disparo (y opcionalmente la acción o salida).
-Tabla de Transiciones
-    Vista tabular de las mismas transiciones: para cada estado actual y evento/condición, indica el estado siguiente (y la salida asociada, si existiera).
-SysTick
-    Temporizador interno de Cortex-M que genera una interrupción periódica. Suele usarse para contar tiempo en milisegundos sin bloqueos.
-SysTick->LOAD, VAL, CTRL
-    LOAD: valor inicial de cuenta (por ejemplo, SystemCoreClock/1000 – 1 para 1 ms).
-    VAL: contador actual; escribir 0 lo reinicia.
-    CTRL: bits que habilitan el temporizador, la fuente de reloj y la interrupción.
-SysTick_Handler()
-    Rutina de servicio de interrupción (ISR) que se ejecuta cada vez que SysTick desborda; normalmente incrementa un contador global de milisegundos.
-GetTick()
-    Función de conveniencia que retorna el valor del contador de milisegundos, usado para medir intervalos de tiempo.
-GPIO (General-Purpose I/O)
-    Puertos de entrada/salida digitales del microcontrolador. Cada pin puede configurarse como entrada o salida.
-RCC->AHB1ENR
-    Registro de control de reloj del bus AHB1. Sus bits habilitan el clock para los distintos puertos GPIO (p.ej. bit 0 para GPIOA).
-GPIOx->MODER
-    Registro que define el modo de cada pin (00 = entrada, 01 = salida, 10 = alterno, 11 = analógico).
-Lectura de botón
-    Se hace leyendo el Input Data Register (GPIOA->IDR): si el bit del pin está a 1, el pulsador está presionado.
-enum
-    Tipo de datos en C que define constantes enteras con nombre (p.ej. ESPERA, DEBOUNCE_PRESS, …) para los estados de la MEF.
-struct
-    Agrupa variables heterogéneas en un solo objeto; aquí se emplea para mantener juntas la variable de estado y el tiempo de última transición (lastChangeTime).
-ButtonFSM_Init()
-    Función que inicializa la estructura de la MEF, poniendo el estado en ESPERA y guardando el tick inicial.
-ButtonFSM_Update()
-    Función que aplica la lógica de la MEF: lee el botón, comprueba el tiempo transcurrido con GetTick() y ejecuta las transiciones correspondientes.
-Bucle principal (while(1))
-    Ejecuta de forma continua ButtonFSM_Update() (polling) y puede añadir otras tareas sin bloquearse gracias al uso de SysTick.
-Buenas prácticas
+---
+
+### 🔄 Diagrama de Estados
+Representación gráfica de la MEF (Máquina de Estados Finitos) donde:
+- Cada **nodo** representa un estado.
+- Cada **flecha** representa una transición.
+- Las flechas están **etiquetadas** con:
+  - La **condición** de disparo.
+  - (Opcionalmente) la **acción** o salida.
+
+---
+
+### 📋 Tabla de Transiciones
+Vista tabular de las transiciones, donde:
+- Cada fila indica:
+  - El **estado actual**.
+  - El **evento o condición**.
+  - El **estado siguiente**.
+  - (Opcionalmente) la **salida asociada**.
+
+---
+
+### ⏱️ SysTick
+Temporizador interno del Cortex-M que genera una interrupción periódica.
+Se usa normalmente para llevar cuenta del tiempo en milisegundos sin bloquear el programa.
+
+#### Registros asociados:
+- `SysTick->LOAD`: Valor inicial de la cuenta (por ejemplo, `SystemCoreClock/1000 - 1` para contar cada 1 ms).
+- `SysTick->VAL`: Valor actual del contador. Escribir `0` lo reinicia.
+- `SysTick->CTRL`: Controla el temporizador (habilitar, fuente de reloj, interrupción).
+
+---
+
+### 🛎️ SysTick_Handler()
+Rutina de interrupción que se ejecuta cuando `SysTick` desborda.
+Normalmente incrementa un **contador global de milisegundos**.
+
+---
+
+### 🕒 GetTick()
+Función que retorna el valor del contador de milisegundos. 
+Sirve para medir intervalos de tiempo sin bloqueos.
+
+---
+
+### 🧰 GPIO (General-Purpose I/O)
+Puertos digitales del microcontrolador. Cada pin puede configurarse como:
+- Entrada
+- Salida
+- Función alterna
+- Analógico
+
+#### Registros útiles:
+- `RCC->AHB1ENR`: Habilita el reloj de los puertos GPIO (ejemplo: bit 0 para `GPIOA`).
+- `GPIOx->MODER`: Define el modo de cada pin:
+  - `00`: Entrada
+  - `01`: Salida
+  - `10`: Alterna
+  - `11`: Analógico
+
+---
+
+### 🔘 Lectura de botón
+Se hace leyendo el registro `GPIOA->IDR`:
+- Si el bit correspondiente está en `1`, el botón está **presionado**.
+
+---
+
+### ⚙️ `enum`
+Tipo de datos en C que define **constantes enteras con nombre**, usadas para representar los **estados** de la MEF, por ejemplo:
+```c
+enum { ESPERA, DEBOUNCE_PRESS, DEBOUNCE_RELEASE };
+
 
     Encapsular la MEF en archivos .c/.h.
     Evitar retardos bloqueantes (delay()).
